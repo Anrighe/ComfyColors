@@ -17,6 +17,8 @@ using json = nlohmann::json;
 
 #define DEBUG false
 
+#define DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE 30
+
 /**
  * @class Settings
  * @brief Manages the loading and retrieval of application settings from a JSON configuration file.
@@ -42,6 +44,8 @@ private:
     std::string desktopDefaultColorHex;
     std::time_t lastExecutionTime;
 
+    unsigned short int brightnessReductionPercentage;
+
     void generateSettingsDirectory() {
         std::cout<<"Generating new settings directory...\n";
         std::filesystem::create_directory(settingsDirectoryPath);
@@ -65,6 +69,8 @@ private:
         settingsFile["desktopDefaultColorHex"] = ColorUtils::getColorHexRepresentation(desktopController.getDesktopBackgroundColor());
 
         settingsFile["lastExecutionTime"] = TimeUtils::getCurrentSystemTime();
+
+        settingsFile["brightnessReductionPercentage"] = DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE;
         
         std::ofstream file(settingsFilePath);
         file<<settingsFile;
@@ -94,6 +100,7 @@ private:
             settingsFile["desktopDefaultColorColorref"] = settingsFile["desktopDefaultColorColorref"].get<COLORREF>();
             desktopDefaultColorHex = settingsFile["desktopDefaultColorHex"].get<std::string>(); 
             lastExecutionTime = settingsFile["lastExecutionTime"].get<std::time_t>();
+            brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<unsigned short int>();
 
             std::cout<<"Settings file successfully loaded\n";
         } catch (const std::exception &e) {
@@ -122,4 +129,15 @@ public:
     std::filesystem::path getSettingsFilePath() { return settingsFilePath; }
     
     json getSettingsFile() { return settingsFile; }
+
+    bool isDebugEnabled() { return debugEnabled; }
+
+    COLORREF getDesktopDefaultColorColorref() { return desktopDefaultColorColorref; }
+    std::string getDesktopDefaultColorHex() { return desktopDefaultColorHex; }
+
+    std::time_t getLastExecutionTime() { return lastExecutionTime; }
+
+    unsigned short int getBrightnessReductionPercentage() { return brightnessReductionPercentage; }
+
+    //TODO: implement setters which modify the settings.json file
 };

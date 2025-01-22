@@ -6,10 +6,13 @@ SETTINGS_FILE = settings.json
 PROJECT_NAME = comfyColors
 EXECUTABLE_NAME = $(PROJECT_NAME).exe
 
-all: $(OBJS)
+all: clean $(OBJS)
 	$(CXX) -o $(PROJECT_NAME) $(OBJS)
 
 main.o: src/main.cpp
 	$(CXX) $(CXXFLAGS) -c src/main.cpp -o main.o
 
 clean:
+	del main.o
+	del comfyColors.exe
+	del settings.json
