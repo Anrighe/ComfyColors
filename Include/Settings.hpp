@@ -19,6 +19,9 @@ using json = nlohmann::json;
 
 #define DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE 30
 
+#define DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE 50
+
+
 /**
  * @class Settings
  * @brief Manages the loading and retrieval of application settings from a JSON configuration file.
@@ -45,6 +48,7 @@ private:
     std::time_t lastExecutionTime;
 
     unsigned short int brightnessReductionPercentage;
+    unsigned short int maximumBrightnessTimePercentage;
 
     void generateSettingsDirectory() {
         std::cout<<"Generating new settings directory...\n";
@@ -71,6 +75,8 @@ private:
         settingsFile["lastExecutionTime"] = TimeUtils::getCurrentSystemTime();
 
         settingsFile["brightnessReductionPercentage"] = DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE;
+
+        settingsFile["maximumBrightnessTimePercentage"] = DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE;
         
         std::ofstream file(settingsFilePath);
         file<<settingsFile;
@@ -101,6 +107,7 @@ private:
             desktopDefaultColorHex = settingsFile["desktopDefaultColorHex"].get<std::string>(); 
             lastExecutionTime = settingsFile["lastExecutionTime"].get<std::time_t>();
             brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<unsigned short int>();
+            maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<unsigned short int>();
 
             std::cout<<"Settings file successfully loaded\n";
         } catch (const std::exception &e) {
@@ -138,6 +145,8 @@ public:
     std::time_t getLastExecutionTime() { return lastExecutionTime; }
 
     unsigned short int getBrightnessReductionPercentage() { return brightnessReductionPercentage; }
+
+    unsigned short int getMaximumBrightnessTimePercentage() { return maximumBrightnessTimePercentage; }
 
     //TODO: implement setters which modify the settings.json file
 };

@@ -11,10 +11,6 @@ public:
 
     ~ColorHandler() {}
 
-    // function to implement: e^(-(x - μ)^2/(2 σ^2))/(sqrt(2 π) σ) 
-    // Gaussian
-    // TODO: use a y axis offset? need to think
-
     COLORREF getColorPerTimeOfDay(time_t time) {
 
         //TODO: Implement
