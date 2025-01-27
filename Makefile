@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -pedantic-errors -std=c++23
-DEPENDENCIES = Dependencies/nlohmann/json.hpp Include/ColorUtils.hpp Include/DesktopController.hpp Include/Settings.hpp Include/TimeUtils.hpp
+DEPENDENCIES = Dependencies/nlohmann/json.hpp Include/ColorUtils.hpp Include/DesktopController.hpp Include/Settings.hpp Include/TimeUtils.hpp Include/SolarCycleDTO.hpp Include/SolarCycleResponse.hpp Include/SolarCycleClient.hpp
 OBJS = main.o
 SETTINGS_FILE = settings.json
 PROJECT_NAME = comfyColors

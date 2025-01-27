@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include "TimeUtils.hpp"
 
-using json = nlohmann::json;
+using json = nlohmann::ordered_json;
 
 #define PROJECT_NAME "ComfyColors"
 #define SETTINGS_FILE_NAME "settings.json"
@@ -20,6 +20,10 @@ using json = nlohmann::json;
 #define DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE 30
 
 #define DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE 50
+
+#define DEFAULT_SOLAR_CYCLE_ENDPOINT "https://api.sunrisesunset.io/"
+
+#define DEFAULT_IP_API_GEOLOCATION_ENDPOINT "https://ip-api.com/"
 
 
 /**
@@ -46,6 +50,10 @@ private:
     COLORREF desktopDefaultColorColorref;
     std::string desktopDefaultColorHex;
     std::time_t lastExecutionTime;
+
+    std::string solarCycleApiEndpoint;
+
+    std::string ipGeolocationApiEndpoint;
 
     unsigned short int brightnessReductionPercentage;
     unsigned short int maximumBrightnessTimePercentage;
@@ -77,9 +85,13 @@ private:
         settingsFile["brightnessReductionPercentage"] = DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE;
 
         settingsFile["maximumBrightnessTimePercentage"] = DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE;
+
+        settingsFile["solarCycleApiEndpoint"] = DEFAULT_SOLAR_CYCLE_ENDPOINT;
+
+        settingsFile["ipGeolocationApiEndpoint"] = DEFAULT_IP_API_GEOLOCATION_ENDPOINT;
         
         std::ofstream file(settingsFilePath);
-        file<<settingsFile;
+        file<<settingsFile.dump(4);
         file.close();
     }
 
@@ -108,6 +120,8 @@ private:
             lastExecutionTime = settingsFile["lastExecutionTime"].get<std::time_t>();
             brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<unsigned short int>();
             maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<unsigned short int>();
+            solarCycleApiEndpoint = settingsFile["solarCycleApiEndpoint"].get<std::string>();
+            ipGeolocationApiEndpoint = settingsFile["ipGeolocationApiEndpoint"].get<std::string>();
 
             std::cout<<"Settings file successfully loaded\n";
         } catch (const std::exception &e) {
@@ -147,6 +161,10 @@ public:
     unsigned short int getBrightnessReductionPercentage() { return brightnessReductionPercentage; }
 
     unsigned short int getMaximumBrightnessTimePercentage() { return maximumBrightnessTimePercentage; }
+
+    std::string getsolarCycleApiEndpoint() { return solarCycleApiEndpoint; }
+
+    std::string getIpGeolocationApiEndpoint() { return ipGeolocationApiEndpoint; }
 
     //TODO: implement setters which modify the settings.json file
 };
