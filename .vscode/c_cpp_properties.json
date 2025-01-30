@@ -4,7 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\mingw64\\include\\c++\\14.2.0"
+                "C:/mingw64/include/c++/14.2.0",
+                "C:/Program Files/FireDaemon OpenSSL 3/include/**",
+                "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32",
+                "C:/mingw64/include/c++/14.2.0/backward"
             ],
             "defines": [
                 "_DEBUG",

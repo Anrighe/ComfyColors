@@ -2,7 +2,6 @@
 
 class SolarCycleResponse {
 
-
 private:
     std::string date;
     std::string sunrise;
@@ -65,103 +64,53 @@ public:
     {};
 
 
-    std::string getDate() {
-        return date;
-    }
+    std::string getDate() { return date; }
 
-    std::string getSunrise() {
-        return sunrise;
-    }
+    std::string getSunrise() { return sunrise; }
 
-    std::string getSunset() {
-        return sunset;
-    }
+    std::string getSunset() { return sunset; }
 
-    std::string getFirstLight() {
-        return firstLight;
-    }
+    std::string getFirstLight() { return firstLight; }
 
-    std::string getLastLight() {
-        return lastLight;
-    }
+    std::string getLastLight() { return lastLight; }
 
-    std::string getDawn() {
-        return dawn;
-    }
+    std::string getDawn() { return dawn; }
 
-    std::string getDusk() {
-        return dusk;
-    }
+    std::string getDusk() { return dusk; }
 
-    std::string getSolarNoon() {
-        return solarNoon;
-    }
+    std::string getSolarNoon() { return solarNoon; }
 
-    std::string getGoldenHour() {
-        return goldenHour;
-    }
+    std::string getGoldenHour() { return goldenHour; }
 
-    std::string getDayLength() {
-        return dayLength;
-    }
+    std::string getDayLength() { return dayLength; }
 
-    std::string getTimezone() {
-        return timezone;
-    }
+    std::string getTimezone() { return timezone; }
 
-    int getUtcOffset() {
-        return utcOffset;
-    }
+    int getUtcOffset() { return utcOffset; }
 
-    std::string getStatus() {
-        return status;
-    }
+    std::string getStatus() { return status; }
 
-    void setDate(std::string date) {
-        this->date = date;
-    }
+    void setDate(std::string date) { this->date = date; }
 
-    void setSunrise(std::string sunrise) {
-        this->sunrise = sunrise;
-    }
+    void setSunrise(std::string sunrise) { this->sunrise = sunrise; }
 
-    void setSunset(std::string sunset) {
-        this->sunset = sunset;
-    }
+    void setSunset(std::string sunset) { this->sunset = sunset; }
 
-    void setFirstLight(std::string firstLight) {
-        this->firstLight = firstLight;
-    }
+    void setFirstLight(std::string firstLight) { this->firstLight = firstLight; }
 
-    void setLastLight(std::string lastLight) {
-        this->lastLight = lastLight;
-    }
+    void setLastLight(std::string lastLight) { this->lastLight = lastLight; }
 
-    void setDawn(std::string dawn) {
-        this->dawn = dawn;
-    }
+    void setDawn(std::string dawn) { this->dawn = dawn; }
 
-    void setDusk(std::string dusk) {
-        this->dusk = dusk;
-    }
+    void setDusk(std::string dusk) { this->dusk = dusk; }
 
-    void setSolarNoon(std::string solarNoon) {
-        this->solarNoon = solarNoon;
-    }
+    void setSolarNoon(std::string solarNoon) { this->solarNoon = solarNoon; }
 
-    void setGoldenHour(std::string goldenHour) {
-        this->goldenHour = goldenHour;
-    }
+    void setGoldenHour(std::string goldenHour) { this->goldenHour = goldenHour; }
 
-    void setDayLength(std::string dayLength) {
-        this->dayLength = dayLength;
-    }
+    void setDayLength(std::string dayLength) { this->dayLength = dayLength; }
 
-    void setTimezone(std::string timezone) {
-        this->timezone = timezone;
-    }
+    void setTimezone(std::string timezone) { this->timezone = timezone; }
 
-    void setUtcOffset(int utcOffset) {
-        this->utcOffset = utcOffset;
-    }
+    void setUtcOffset(int utcOffset) { this->utcOffset = utcOffset; }
 };
