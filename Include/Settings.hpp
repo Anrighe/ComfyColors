@@ -162,7 +162,7 @@ public:
 
     unsigned short int getMaximumBrightnessTimePercentage() { return maximumBrightnessTimePercentage; }
 
-    std::string getsolarCycleApiEndpoint() { return solarCycleApiEndpoint; }
+    std::string getSolarCycleApiEndpoint() { return solarCycleApiEndpoint; }
 
     std::string getIpGeolocationApiEndpoint() { return ipGeolocationApiEndpoint; }
 

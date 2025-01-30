@@ -1,5 +1,5 @@
 #include "../Include/Settings.hpp"
-
+#include "../Include/SolarCycleClient.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -17,6 +17,20 @@ int main(int argc, char *argv[]) {
     } else {
         std::cerr << "Failed to parse time.\n";
     }
+
+
+    SolarCycleClient solarCycleClient(settings.getSolarCycleApiEndpoint());
+
+    double lat = 44.52989203907902;
+    double lng = 10.782190547321138;
+
+
+    SolarCycleDTO solarCycleDTO(lat, lng);
+    SolarCycleResponse solarCycleResponse = solarCycleClient.getSolarCycleData(solarCycleDTO);
+
+    std::cout<<solarCycleResponse.getDate()<<" "<<solarCycleResponse.getDawn()<<" "<<solarCycleResponse.getDusk()<<"\n";
+
+    
 
     return 0;
 }
