@@ -51,7 +51,7 @@ public:
      *
      * @return std::time_t The time at the start of the current day.
      */
-    static std::time_t getStartOfDayTime() {
+    static std::time_t getStartOfCurrentDayTime() {
         std::time_t now = std::time(nullptr);
 
         std::tm startOfDayTimeStruct = *std::localtime(&now);
@@ -79,7 +79,7 @@ public:
             return -1;
         }
         
-        std::time_t startOfTodayTime = getStartOfDayTime();
+        std::time_t startOfTodayTime = getStartOfCurrentDayTime();
         
         std::tm timeToReturnStruct = *std::localtime(&startOfTodayTime);
         timeToReturnStruct.tm_hour = parsedTimeHolder.tm_hour;

@@ -13,9 +13,9 @@ int main(int argc, char *argv[]) {
     std::time_t time = TimeUtils::parseTimeFromTodayHourMinuteSecond("08:43:07 PM");
 
     if (time != -1) {
-        std::cout << "Parsed time: " << std::string(std::ctime(&time)) << std::endl;
+        std::cout<<"Parsed time: "<<std::string(std::ctime(&time))<<"\n";
     } else {
-        std::cerr << "Failed to parse time.\n";
+        std::cerr<<"Failed to parse time.\n";
     }
 
 
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 
     std::cout<<solarCycleResponse.getDate()<<" "<<solarCycleResponse.getDawn()<<" "<<solarCycleResponse.getDusk()<<"\n";
 
-    
+
 
     return 0;
 }

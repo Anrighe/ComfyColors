@@ -25,6 +25,8 @@ using json = nlohmann::ordered_json;
 
 #define DEFAULT_IP_API_GEOLOCATION_ENDPOINT "https://ip-api.com/"
 
+#define DATABASE_FILENAME "solarCycle.db"
+
 
 /**
  * @class Settings
@@ -40,6 +42,7 @@ private:
     const std::filesystem::path currentPath = std::filesystem::current_path();
     const std::filesystem::path settingsDirectoryPath = currentPath.string();
     const std::filesystem::path settingsFilePath = settingsDirectoryPath.string() + "\\" + settingsFileName;
+    const std::filesystem::path databaseFilePath = settingsDirectoryPath.string() + "\\" + DATABASE_FILENAME;
 
     bool debugEnabled;
 
@@ -55,8 +58,8 @@ private:
 
     std::string ipGeolocationApiEndpoint;
 
-    unsigned short int brightnessReductionPercentage;
-    unsigned short int maximumBrightnessTimePercentage;
+    unsigned short brightnessReductionPercentage;
+    unsigned short maximumBrightnessTimePercentage;
 
     void generateSettingsDirectory() {
         std::cout<<"Generating new settings directory...\n";
@@ -118,8 +121,8 @@ private:
             settingsFile["desktopDefaultColorColorref"] = settingsFile["desktopDefaultColorColorref"].get<COLORREF>();
             desktopDefaultColorHex = settingsFile["desktopDefaultColorHex"].get<std::string>(); 
             lastExecutionTime = settingsFile["lastExecutionTime"].get<std::time_t>();
-            brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<unsigned short int>();
-            maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<unsigned short int>();
+            brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<unsigned short>();
+            maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<unsigned short>();
             solarCycleApiEndpoint = settingsFile["solarCycleApiEndpoint"].get<std::string>();
             ipGeolocationApiEndpoint = settingsFile["ipGeolocationApiEndpoint"].get<std::string>();
 
@@ -128,6 +131,8 @@ private:
             std::cout<<std::format("Error while loading the settings file: {}\n", e.what());
         }
     }
+
+
 
 public:
 
@@ -158,13 +163,15 @@ public:
 
     std::time_t getLastExecutionTime() { return lastExecutionTime; }
 
-    unsigned short int getBrightnessReductionPercentage() { return brightnessReductionPercentage; }
+    unsigned short getBrightnessReductionPercentage() { return brightnessReductionPercentage; }
 
-    unsigned short int getMaximumBrightnessTimePercentage() { return maximumBrightnessTimePercentage; }
+    unsigned short getMaximumBrightnessTimePercentage() { return maximumBrightnessTimePercentage; }
 
     std::string getSolarCycleApiEndpoint() { return solarCycleApiEndpoint; }
 
     std::string getIpGeolocationApiEndpoint() { return ipGeolocationApiEndpoint; }
+
+    std::string getDatabaseFilePath() { return databaseFilePath.string(); }
 
     //TODO: implement setters which modify the settings.json file
 };
