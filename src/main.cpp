@@ -1,7 +1,11 @@
 #include "../Include/Settings.hpp"
 #include "../Include/SolarCycleClient.hpp"
+#include "../Include/ColorHandler.hpp"
+#include <ctime>
 
 int main(int argc, char *argv[]) {
+    
+    // TODO: implement argument for simulation + Simulator class
 
     DesktopController desktopController;
     std::cout<<TimeUtils::getCurrentSystemTime()<<"\n";
@@ -30,7 +34,9 @@ int main(int argc, char *argv[]) {
 
     std::cout<<solarCycleResponse.getDate()<<" "<<solarCycleResponse.getDawn()<<" "<<solarCycleResponse.getDusk()<<"\n";
 
+    ColorHandler colorHandler(settings, solarCycleResponse);
 
+    desktopController.setDesktopBackgroundColorColorref(colorHandler.getColorPerTimeOfDay());
 
     return 0;
 }

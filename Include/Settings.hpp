@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -79,8 +81,7 @@ private:
         std::cout<<std::format("Generating settings.json file in {}\n", settingsFilePath.string());
         
         settingsFile["debug"] = DEBUG;
-
-        settingsFile["desktopDefaultColorColorref"] = desktopController.getDesktopBackgroundColor();
+        
         settingsFile["desktopDefaultColorHex"] = ColorUtils::getColorHexRepresentation(desktopController.getDesktopBackgroundColor());
 
         settingsFile["lastExecutionTime"] = TimeUtils::getCurrentSystemTime();
@@ -117,9 +118,13 @@ private:
             file>>settingsFile;
             file.close();
 
-            debugEnabled = settingsFile["debug"].get<bool>();
-            settingsFile["desktopDefaultColorColorref"] = settingsFile["desktopDefaultColorColorref"].get<COLORREF>();
-            desktopDefaultColorHex = settingsFile["desktopDefaultColorHex"].get<std::string>(); 
+            debugEnabled = settingsFile["debug"].get<bool>();            
+            desktopDefaultColorHex = settingsFile["desktopDefaultColorHex"].get<std::string>();
+
+            // This get's parsed to COLORREF from hex value because it the only way I found to make this work.
+            //  If parsed and casted directly in COLORREF it returned random numbers
+            desktopDefaultColorColorref = ColorUtils::HexToColorRef(desktopDefaultColorHex);
+
             lastExecutionTime = settingsFile["lastExecutionTime"].get<std::time_t>();
             brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<double>();
             maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<double>();

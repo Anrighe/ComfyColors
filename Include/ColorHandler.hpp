@@ -1,8 +1,10 @@
+#pragma once
+
 #include <winsock2.h>
 #include <windows.h>
-#include "Settings.hpp"
 #include "SolarCycleResponse.hpp"
 #include "TimeUtils.hpp"
+#include "Settings.hpp"
 
 #define MAXIMUM_BRIGHTNESS_PERCENTAGE 1.0
 
@@ -42,6 +44,9 @@ public:
         brightnessReductionPercentage = settings.getBrightnessReductionPercentage();
         maximumBrightnessTimePercentage = settings.getMaximumBrightnessTimePercentage();
         defaultBaseColor = settings.getDesktopDefaultColorColorref();
+
+        std::cout<<"LOADED FROM SETTINGS IN COLORHANDLER: "<<defaultBaseColor<<"\n";
+        
         desktopDefaultColorHex = settings.getDesktopDefaultColorHex();
 
         sunrise = TimeUtils::parseTimeFromTodayHourMinuteSecond(solarCycleResponse.getFirstLight());
@@ -66,47 +71,75 @@ public:
      * @return The brightness reduction percentage
      * @throws std::invalid_argument if the given time is not within the current day
      */
-    unsigned short getPercentageReductionPerTimeOfDay(time_t time) {
+    double getPercentageReductionPerTimeOfDay(time_t time) {
         if (!TimeUtils::areTimesInSameDay(TimeUtils::getStartOfCurrentDayTime(), time))
             throw std::invalid_argument("Argument 'time' must refer to the current day");
 
-        if (time > maximumBrightnessTimeStart && time < maximumBrightnessTimeEnd)
-            return MAXIMUM_BRIGHTNESS_PERCENTAGE;
+        //std::cout<<"time: "<<time<<"\n";
         
-        if (time > firstLight && time < maximumBrightnessTimeStart)
-            return (int)(time * ((MAXIMUM_BRIGHTNESS_PERCENTAGE) - brightnessReductionPercentage));
+        //std::cout<<"maximumBrightnessTimeStart: "<<maximumBrightnessTimeStart<<"\n";
+        
+        //std::cout<<"maximumBrightnessTimeEnd: "<<maximumBrightnessTimeEnd<<"\n";
+        
+        //std::cout<<"firstLight: "<<firstLight<<"\n";
 
-        if (time > maximumBrightnessTimeEnd && time < lastLight)
-            return (int)(time * -1 * ((MAXIMUM_BRIGHTNESS_PERCENTAGE) - brightnessReductionPercentage));
+        //std::cout<<"lastLight: "<<lastLight<<"\n";
 
+        //std::cout<<"brightnessReductionPercentage: "<<brightnessReductionPercentage<<"\n";
+
+        std::cout<<"DEFAULT BASE COLORREF: "<<defaultBaseColor<<"\n";
+
+        if (time > maximumBrightnessTimeStart && time < maximumBrightnessTimeEnd) {
+            std::cout<<"Returning maximum brightness percentage"<<"\n";
+            return MAXIMUM_BRIGHTNESS_PERCENTAGE;
+        }
+        
+        if (time > firstLight && time < maximumBrightnessTimeStart) {
+            std::cout<<"Returning brightness increasing: "<<MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage<<"\n";
+            //return (int)(time * ((MAXIMUM_BRIGHTNESS_PERCENTAGE) - brightnessReductionPercentage));
+            return MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage;
+        }
+
+        if (time > maximumBrightnessTimeEnd && time < lastLight) {
+            std::cout<<"Returning brightness decreasing: "<<MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage<<"\n";
+            //return (int)(time * -1 * ((MAXIMUM_BRIGHTNESS_PERCENTAGE) - brightnessReductionPercentage));
+            return MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage;
+        }
+
+        std::cout<<"Returning brightness minimum"<<"\n";
         return brightnessReductionPercentage;
     }
 
     /**
-     * @brief Reduces the brightness of a given COLORREF value, by a specified reduction factor.
+     * @brief Modifies the brightness of a given COLORREF value, by a specified  factor.
      *  E.g.: The factor passed as argument is 0.7 (I want to reduce brightness of the colorref to
      *   70% of its original values).
      * @param colorref The original color
-     * @param brightnessReduction The reduction percentage factor 
+     * @param brightnessFactor The reduction percentage factor 
      * @return The color with reduced brightness
-     * @throws std::invalid_argument if the given brightness reduction factor is higher than 1.0 (100%)
      */
-    COLORREF getReducedColorrefBrightness(COLORREF colorref, double brightnessReduction) {
+    COLORREF getColorrefBrightnessByFactor(COLORREF colorref, double brightnessFactor) {
 
-        if (brightnessReduction > 1.0)
-            throw std::invalid_argument("Cannot reduce brightness for a factor higher than 100%");
+        int red = ColorUtils::getRedfromColorref(colorref);
+        int green = ColorUtils::getGreenfromColorref(colorref);
+        int blue = ColorUtils::getBluefromColorref(colorref);
 
-        double brightnessReductionFactor = MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReduction;
-
-        int red = GetRValue(colorref);
-        int green = GetGValue(colorref);
-        int blue = GetBValue(colorref);
-
-        red = static_cast<int>(red * brightnessReductionFactor);
-        green = static_cast<int>(green * brightnessReductionFactor);
-        blue = static_cast<int>(blue * brightnessReductionFactor);
+        red = static_cast<int>(red * brightnessFactor);
+        green = static_cast<int>(green * brightnessFactor);
+        blue = static_cast<int>(blue * brightnessFactor);
 
         return RGB(red, green, blue);
+    }
+
+    /**
+     * @brief Gets the adjusted color based on the current time of day.
+     * @return The adjusted COLORREF value
+     */
+    COLORREF getColorPerTimeOfDay() {
+        return getColorrefBrightnessByFactor(
+            defaultBaseColor, 
+            MAXIMUM_BRIGHTNESS_PERCENTAGE - getPercentageReductionPerTimeOfDay(std::time(0))
+        );
     }
 
     /**
@@ -115,7 +148,10 @@ public:
      * @return The adjusted COLORREF value
      */
     COLORREF getColorPerTimeOfDay(time_t time) {
-        return getReducedColorrefBrightness(defaultBaseColor, getPercentageReductionPerTimeOfDay(time));
+        return getColorrefBrightnessByFactor(
+            defaultBaseColor, 
+            MAXIMUM_BRIGHTNESS_PERCENTAGE - getPercentageReductionPerTimeOfDay(time)
+        );
     }
     
     /**

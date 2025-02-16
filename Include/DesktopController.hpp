@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -6,16 +8,12 @@
 class DesktopController {
 
 private:
-    
+
     const int cElements = 1;
     const int lpaElements[1] = {COLOR_DESKTOP};
 
     COLORREF desktopBackgroundColor = CLR_INVALID;
     COLORREF lpaRgbValues[1] = {desktopBackgroundColor};
-
-    void setBrightnessLevel() {
-        // IMPLEMENT IN THE FUTURE IF NEEDED
-    }
 
     COLORREF fetchDesktopBackgroundColor() {
         DWORD desktopBackgroundColorDWORD = GetSysColor(cElements);
@@ -29,10 +27,18 @@ public:
     }
 
     ~DesktopController() {
-        // TODO: handle destructor
     }
 
-    void setDesktopBackgroundColor(int red, int green, int blue) {
+    void setDesktopBackgroundColorColorref(const COLORREF desktopBackgroundColorToSet) {
+        constexpr int numElements = 1;
+        constexpr int displayElements[] = {COLOR_DESKTOP};
+
+        COLORREF newColors[] = {desktopBackgroundColorToSet};
+
+        SetSysColors(numElements, displayElements, newColors);
+    }
+
+    void setDesktopBackgroundColorRGB(int red, int green, int blue) {
         desktopBackgroundColor = RGB(red, green, blue);
         *lpaRgbValues = {desktopBackgroundColor};
     }
