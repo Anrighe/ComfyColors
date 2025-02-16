@@ -67,6 +67,9 @@ public:
 
     /**
      * @brief Calculates the brightness reduction percentage based on the given time.
+     *  Takes into consideration how far it's been from the first light and how much time 
+     *   will it take to reach the last light to calculate a linear decrement/increment for the reduction factor.
+     *    At its peak (brightness) the reduction factor is minimized, at its lows the reduction factor is maximized.
      * @param time The current time for which brightness reduction is calculated
      * @return The brightness reduction percentage
      * @throws std::invalid_argument if the given time is not within the current day
@@ -74,18 +77,6 @@ public:
     double getPercentageReductionPerTimeOfDay(time_t time) {
         if (!TimeUtils::areTimesInSameDay(TimeUtils::getStartOfCurrentDayTime(), time))
             throw std::invalid_argument("Argument 'time' must refer to the current day");
-
-        //std::cout<<"time: "<<time<<"\n";
-        
-        //std::cout<<"maximumBrightnessTimeStart: "<<maximumBrightnessTimeStart<<"\n";
-        
-        //std::cout<<"maximumBrightnessTimeEnd: "<<maximumBrightnessTimeEnd<<"\n";
-        
-        //std::cout<<"firstLight: "<<firstLight<<"\n";
-
-        //std::cout<<"lastLight: "<<lastLight<<"\n";
-
-        //std::cout<<"brightnessReductionPercentage: "<<brightnessReductionPercentage<<"\n";
 
         std::cout<<"DEFAULT BASE COLORREF: "<<defaultBaseColor<<"\n";
 
@@ -96,14 +87,18 @@ public:
         
         if (time > firstLight && time < maximumBrightnessTimeStart) {
             std::cout<<"Returning brightness increasing: "<<MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage<<"\n";
-            //return (int)(time * ((MAXIMUM_BRIGHTNESS_PERCENTAGE) - brightnessReductionPercentage));
-            return MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage;
+            
+            double currentTimeReductionFactor = (time - firstLight) / (maximumBrightnessTimeStart - firstLight);
+
+            return MAXIMUM_BRIGHTNESS_PERCENTAGE - (brightnessReductionPercentage * currentTimeReductionFactor);
         }
 
         if (time > maximumBrightnessTimeEnd && time < lastLight) {
             std::cout<<"Returning brightness decreasing: "<<MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage<<"\n";
-            //return (int)(time * -1 * ((MAXIMUM_BRIGHTNESS_PERCENTAGE) - brightnessReductionPercentage));
-            return MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage;
+
+            double currentTimeReductionFactor = (time - maximumBrightnessTimeEnd) / (lastLight - maximumBrightnessTimeEnd);
+
+            return MAXIMUM_BRIGHTNESS_PERCENTAGE - (brightnessReductionPercentage * currentTimeReductionFactor) ;
         }
 
         std::cout<<"Returning brightness minimum"<<"\n";
