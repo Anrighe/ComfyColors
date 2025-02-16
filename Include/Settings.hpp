@@ -17,9 +17,9 @@ using json = nlohmann::ordered_json;
 
 #define DEBUG false
 
-#define DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE 30
+#define DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE 0.35
 
-#define DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE 50
+#define DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE 0.5
 
 #define DEFAULT_SOLAR_CYCLE_ENDPOINT "https://api.sunrisesunset.io/"
 
@@ -58,8 +58,8 @@ private:
 
     std::string ipGeolocationApiEndpoint;
 
-    unsigned short brightnessReductionPercentage;
-    unsigned short maximumBrightnessTimePercentage;
+    double brightnessReductionPercentage;
+    double maximumBrightnessTimePercentage;
 
     void generateSettingsDirectory() {
         std::cout<<"Generating new settings directory...\n";
@@ -121,8 +121,8 @@ private:
             settingsFile["desktopDefaultColorColorref"] = settingsFile["desktopDefaultColorColorref"].get<COLORREF>();
             desktopDefaultColorHex = settingsFile["desktopDefaultColorHex"].get<std::string>(); 
             lastExecutionTime = settingsFile["lastExecutionTime"].get<std::time_t>();
-            brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<unsigned short>();
-            maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<unsigned short>();
+            brightnessReductionPercentage = settingsFile["brightnessReductionPercentage"].get<double>();
+            maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<double>();
             solarCycleApiEndpoint = settingsFile["solarCycleApiEndpoint"].get<std::string>();
             ipGeolocationApiEndpoint = settingsFile["ipGeolocationApiEndpoint"].get<std::string>();
 
@@ -163,9 +163,9 @@ public:
 
     std::time_t getLastExecutionTime() { return lastExecutionTime; }
 
-    unsigned short getBrightnessReductionPercentage() { return brightnessReductionPercentage; }
+    double getBrightnessReductionPercentage() { return brightnessReductionPercentage; }
 
-    unsigned short getMaximumBrightnessTimePercentage() { return maximumBrightnessTimePercentage; }
+    double getMaximumBrightnessTimePercentage() { return maximumBrightnessTimePercentage; }
 
     std::string getSolarCycleApiEndpoint() { return solarCycleApiEndpoint; }
 
