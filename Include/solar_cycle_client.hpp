@@ -15,7 +15,7 @@ private:
     std::string solarCycleEndpoint;
 
     std::string prepareSolarCycleRequestParameters(SolarCycleDTO solarCycleDTO) {
-        return std::format("json?lat={}&lng={}", solarCycleDTO.getLatitude(), solarCycleDTO.getLongitude());
+        return std::format("/json?lat={}&lng={}", solarCycleDTO.getLatitude(), solarCycleDTO.getLongitude());
     }
 
 public:
@@ -32,8 +32,6 @@ public:
                 throw std::runtime_error(std::format("Failed to retrieve solar cycle data from the API: return code", response->status));
             }
 
-            //std::cout<<std::format("Response body: {}\n", response->body);
-
             SolarCycleResponse solarCycleResponse(json::parse(response->body));
 
             return solarCycleResponse;
@@ -42,9 +40,5 @@ public:
             std::cerr<<std::format("Error while fetching solar cycle data: {}\n", e.what());
             exit(1);
         }
-
-   
     }
-
-
 };

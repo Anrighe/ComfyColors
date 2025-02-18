@@ -14,15 +14,11 @@ public:
     void run() {
         DesktopController desktopController;
 
-        // TODO: get latitude/longitude
-        double lat = 44.52989203907902;
-        double lng = 10.782190547321138;
-    
         Settings settings(desktopController);
     
         SolarCycleClient solarCycleClient(settings.getSolarCycleApiEndpoint());
-    
-        SolarCycleDTO solarCycleDTO(lat, lng);
+
+        SolarCycleDTO solarCycleDTO(settings.getLatitude(), settings.getLongitude());
         SolarCycleResponse solarCycleResponse = solarCycleClient.getSolarCycleData(solarCycleDTO);
     
         ColorHandler colorHandler(settings, solarCycleResponse);

@@ -44,8 +44,6 @@ public:
         brightnessReductionPercentage = settings.getBrightnessReductionPercentage();
         maximumBrightnessTimePercentage = settings.getMaximumBrightnessTimePercentage();
         defaultBaseColor = settings.getDesktopDefaultColorColorref();
-
-        std::cout<<"LOADED FROM SETTINGS IN COLORHANDLER: "<<defaultBaseColor<<"\n";
         
         desktopDefaultColorHex = settings.getDesktopDefaultColorHex();
 
@@ -78,30 +76,20 @@ public:
         if (!TimeUtils::areTimesInSameDay(TimeUtils::getStartOfCurrentDayTime(), time))
             throw std::invalid_argument("Argument 'time' must refer to the current day");
 
-        std::cout<<"DEFAULT BASE COLORREF: "<<defaultBaseColor<<"\n";
-
         if (time > maximumBrightnessTimeStart && time < maximumBrightnessTimeEnd) {
-            std::cout<<"Returning maximum brightness percentage"<<"\n";
             return MAXIMUM_BRIGHTNESS_PERCENTAGE;
         }
         
         if (time > firstLight && time < maximumBrightnessTimeStart) {
-            std::cout<<"Returning brightness increasing: "<<MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage<<"\n";
-            
             double currentTimeReductionFactor = (time - firstLight) / (maximumBrightnessTimeStart - firstLight);
-
             return MAXIMUM_BRIGHTNESS_PERCENTAGE - (brightnessReductionPercentage * currentTimeReductionFactor);
         }
 
         if (time > maximumBrightnessTimeEnd && time < lastLight) {
-            std::cout<<"Returning brightness decreasing: "<<MAXIMUM_BRIGHTNESS_PERCENTAGE - brightnessReductionPercentage<<"\n";
-
             double currentTimeReductionFactor = (time - maximumBrightnessTimeEnd) / (lastLight - maximumBrightnessTimeEnd);
-
             return MAXIMUM_BRIGHTNESS_PERCENTAGE - (brightnessReductionPercentage * currentTimeReductionFactor) ;
         }
 
-        std::cout<<"Returning brightness minimum"<<"\n";
         return brightnessReductionPercentage;
     }
 

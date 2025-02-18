@@ -73,7 +73,7 @@ public:
     static std::time_t parseTimeFromTodayHourMinuteSecond(std::string timeString) {
         std::tm parsedTimeHolder = {};
         std::istringstream ss(timeString);
-        ss >> std::get_time(&parsedTimeHolder, "%I:%M:%S %p");
+        ss>>std::get_time(&parsedTimeHolder, "%I:%M:%S %p");
 
         if (ss.fail()) {
             std::cerr << "Time parsing failed\n";

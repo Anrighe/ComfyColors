@@ -4,12 +4,14 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include "../Dependencies/nlohmann/json.hpp"
-
-#include "desktop_controller.hpp"
 #include <stdlib.h>
 #include <unistd.h>
+#include <limits>
+
+#include "../Dependencies/nlohmann/json.hpp"
+#include "desktop_controller.hpp"
 #include "time_utils.hpp"
+#include "ip_geolocation_client.hpp"
 
 using json = nlohmann::ordered_json;
 
@@ -23,11 +25,17 @@ using json = nlohmann::ordered_json;
 
 #define DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE 0.5
 
-#define DEFAULT_SOLAR_CYCLE_ENDPOINT "https://api.sunrisesunset.io/"
+#define DEFAULT_SOLAR_CYCLE_ENDPOINT "https://api.sunrisesunset.io"
 
-#define DEFAULT_IP_API_GEOLOCATION_ENDPOINT "https://ip-api.com/"
+#define DEFAULT_IP_API_GEOLOCATION_ENDPOINT "https://ifconfig.co"
 
-#define DATABASE_FILENAME "solarCycle.db"
+#define DEFAULT_SOLAR_CYCLE_CACHE_FILENAME "solar_cycle.cache"
+
+#define DEFAULT_IP_GEOLOCATION_CACHE_FILENAME "ip_geolocation.cache"
+
+#define DEFAULT_LATITUDE 0.0
+
+#define DEFAULT_LONGITUDE 0.0
 
 
 /**
@@ -44,7 +52,6 @@ private:
     const std::filesystem::path currentPath = std::filesystem::current_path();
     const std::filesystem::path settingsDirectoryPath = currentPath.string();
     const std::filesystem::path settingsFilePath = settingsDirectoryPath.string() + "\\" + settingsFileName;
-    const std::filesystem::path databaseFilePath = settingsDirectoryPath.string() + "\\" + DATABASE_FILENAME;
 
     bool debugEnabled;
 
@@ -58,10 +65,13 @@ private:
 
     std::string solarCycleApiEndpoint;
 
-    std::string ipGeolocationApiEndpoint;
-
     double brightnessReductionPercentage;
     double maximumBrightnessTimePercentage;
+
+    std::string ipGeolocationApiEndpoint;
+
+    double latitude;
+    double longitude;
 
     void generateSettingsDirectory() {
         std::cout<<"Generating new settings directory...\n";
@@ -93,6 +103,11 @@ private:
         settingsFile["solarCycleApiEndpoint"] = DEFAULT_SOLAR_CYCLE_ENDPOINT;
 
         settingsFile["ipGeolocationApiEndpoint"] = DEFAULT_IP_API_GEOLOCATION_ENDPOINT;
+
+        IpGeolocationClient ipGeolocationClient(DEFAULT_IP_API_GEOLOCATION_ENDPOINT);
+        IpGeolocationResponse ipGeolocationResponse = ipGeolocationClient.getIpGeolocationData();
+        settingsFile["latitude"] = ipGeolocationResponse.getLatitude();
+        settingsFile["longitude"] = ipGeolocationResponse.getLongitude();
         
         std::ofstream file(settingsFilePath);
         file<<settingsFile.dump(4);
@@ -131,6 +146,9 @@ private:
             solarCycleApiEndpoint = settingsFile["solarCycleApiEndpoint"].get<std::string>();
             ipGeolocationApiEndpoint = settingsFile["ipGeolocationApiEndpoint"].get<std::string>();
 
+            latitude = settingsFile["latitude"].get<double>();
+            longitude = settingsFile["longitude"].get<double>();
+
             std::cout<<"Settings file successfully loaded\n";
         } catch (const std::exception &e) {
             std::cout<<std::format("Error while loading the settings file: {}\n", e.what());
@@ -164,6 +182,7 @@ public:
     bool isDebugEnabled() { return debugEnabled; }
 
     COLORREF getDesktopDefaultColorColorref() { return desktopDefaultColorColorref; }
+
     std::string getDesktopDefaultColorHex() { return desktopDefaultColorHex; }
 
     std::time_t getLastExecutionTime() { return lastExecutionTime; }
@@ -176,7 +195,9 @@ public:
 
     std::string getIpGeolocationApiEndpoint() { return ipGeolocationApiEndpoint; }
 
-    std::string getDatabaseFilePath() { return databaseFilePath.string(); }
+    double getLatitude() { return latitude; }
+
+    double getLongitude() { return longitude; }
 
     //TODO: implement setters which modify the settings.json file
 };

@@ -13,8 +13,6 @@ public:
 
     ColorUtils();
 
-    ~ColorUtils();
-
     static std::tuple<BYTE, BYTE, BYTE> getRgbFromDword(DWORD colorDWORD) {
         
         BYTE red = (colorDWORD >> 16) & 0xFF;
@@ -29,8 +27,6 @@ public:
         BYTE red = (colorDWORD >> 16) & 0xFF;
         BYTE green = (colorDWORD >> 8) & 0xFF;
         BYTE blue = colorDWORD & 0xFF;
-
-
         
         return RGB(red, green, blue);
     }
