@@ -2,9 +2,9 @@
 
 #include <winsock2.h>
 #include <windows.h>
-#include "SolarCycleResponse.hpp"
-#include "TimeUtils.hpp"
-#include "Settings.hpp"
+#include "solar_cycle_response.hpp"
+#include "time_utils.hpp"
+#include "settings.hpp"
 
 #define MAXIMUM_BRIGHTNESS_PERCENTAGE 1.0
 

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "ColorUtils.hpp"
+#include "color_utils.hpp"
 
 class DesktopController {
 
@@ -24,9 +24,6 @@ public:
 
     DesktopController() {
         desktopBackgroundColor = fetchDesktopBackgroundColor();
-    }
-
-    ~DesktopController() {
     }
 
     void setDesktopBackgroundColorColorref(const COLORREF desktopBackgroundColorToSet) {

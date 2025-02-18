@@ -73,6 +73,8 @@
         "list": "cpp",
         "set": "cpp",
         "unordered_set": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "print": "cpp",
+        "cinttypes": "cpp"
     }
 }

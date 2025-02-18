@@ -13,7 +13,6 @@ private:
 
 public:
     TimeUtils();
-    ~TimeUtils();
 
     static std::time_t getCurrentSystemTime() {
         return std::time(nullptr);

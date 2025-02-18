@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -pedantic-errors -std=c++23 -I"C:/Program Files/FireDaemon OpenSSL 3/include"
-DEPENDENCIES = Dependencies/nlohmann/json.hpp Include/ColorUtils.hpp Include/DesktopController.hpp Include/Settings.hpp Include/TimeUtils.hpp Include/SolarCycleDTO.hpp Include/SolarCycleResponse.hpp Include/SolarCycleClient.hpp
+DEPENDENCIES = Dependencies/nlohmann/json.hpp Include/color_utils.hpp Include/desktop_controller.hpp Include/settings.hpp Include/time_utils.hpp Include/solar_cycle_dto.hpp Include/solar_cycle_response.hpp Include/solar_cycle_client.hpp Include/executor.hpp
 OBJS = main.o
 SETTINGS_FILE = settings.json
 PROJECT_NAME = comfyColors

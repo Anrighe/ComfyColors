@@ -6,10 +6,10 @@
 #include <filesystem>
 #include "../Dependencies/nlohmann/json.hpp"
 
-#include "DesktopController.hpp"
+#include "desktop_controller.hpp"
 #include <stdlib.h>
 #include <unistd.h>
-#include "TimeUtils.hpp"
+#include "time_utils.hpp"
 
 using json = nlohmann::ordered_json;
 
