@@ -19,7 +19,11 @@ private:
     int utcOffset;
     std::string status;
 
+    nlohmann::ordered_json originalResponse;
+
 public:
+
+    SolarCycleResponse() {}
 
     SolarCycleResponse(
         std::string date, 
@@ -34,7 +38,8 @@ public:
         std::string dayLength, 
         std::string timezone, 
         int utcOffset,
-        std::string status
+        std::string status,
+        nlohmann::ordered_json response
     ):  date(std::move(date)),
         sunrise(std::move(sunrise)), 
         sunset(std::move(sunset)), 
@@ -47,7 +52,8 @@ public:
         dayLength(std::move(dayLength)), 
         timezone(std::move(timezone)), 
         utcOffset(std::move(utcOffset)),
-        status(std::move(status)) {};
+        status(std::move(status)),
+        originalResponse(std::move(response)) {};
 
     SolarCycleResponse(const nlohmann::ordered_json response) :
         date(response["results"]["date"].get<std::string>()),
@@ -62,8 +68,12 @@ public:
         dayLength(response["results"]["day_length"].get<std::string>()),
         timezone(response["results"]["timezone"].get<std::string>()),
         utcOffset(response["results"]["utc_offset"].get<int>()),
-        status(response["status"].get<std::string>())
-    {};
+        status(response["status"].get<std::string>()),
+        originalResponse(std::move(response)) {};
+
+    nlohmann::ordered_json getJsonOriginalResponse() {
+        return originalResponse;
+    }
 
 
     std::string getDate() { return date; }

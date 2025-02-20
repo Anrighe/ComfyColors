@@ -1,7 +1,7 @@
 #pragma once
 
 #include "settings.hpp"
-#include "solar_cycle_client.hpp"
+#include "solar_cycle_cacher.hpp"
 #include "color_handler.hpp"
 #include <ctime>
 #include <iostream>
@@ -19,9 +19,18 @@ public:
         SolarCycleClient solarCycleClient(settings.getSolarCycleApiEndpoint());
 
         SolarCycleDTO solarCycleDTO(settings.getLatitude(), settings.getLongitude());
-        SolarCycleResponse solarCycleResponse = solarCycleClient.getSolarCycleData(solarCycleDTO);
+        
+        SolarCycleCacher solarCycleCacher(
+            settings.getCacheDirectoryPath(),
+            settings.getSolarCycleCacheFilenamePathString(),
+            solarCycleClient, 
+            solarCycleDTO
+        );
+        
+        SolarCycleResponse solarCycleResponse = solarCycleCacher.getSolarCycleResponse();
     
         ColorHandler colorHandler(settings, solarCycleResponse);
+
         desktopController.setDesktopBackgroundColorColorref(colorHandler.getColorPerTimeOfDay());
     }
     

@@ -37,6 +37,8 @@ using json = nlohmann::ordered_json;
 
 #define DEFAULT_LONGITUDE 0.0
 
+#define CACHE_DIRECTORY_NAME "cache"
+
 
 /**
  * @class Settings
@@ -51,7 +53,7 @@ private:
     
     const std::filesystem::path currentPath = std::filesystem::current_path();
     const std::filesystem::path settingsDirectoryPath = currentPath.string();
-    const std::filesystem::path settingsFilePath = settingsDirectoryPath.string() + "\\" + settingsFileName;
+    const std::filesystem::path settingsFilePath = std::format("{}\\{}", settingsDirectoryPath.string(), settingsFileName);
 
     bool debugEnabled;
 
@@ -69,14 +71,23 @@ private:
     double maximumBrightnessTimePercentage;
 
     std::string ipGeolocationApiEndpoint;
-
+    
     double latitude;
     double longitude;
+
+    std::string solarCycleCacheFilename = DEFAULT_SOLAR_CYCLE_CACHE_FILENAME;
+    std::string ipGeolocationCacheFilename = DEFAULT_IP_GEOLOCATION_CACHE_FILENAME;
+
+    std::filesystem::path cacheDirectoryPath = std::format("{}\\{}", currentPath.string(), CACHE_DIRECTORY_NAME);
+
+    std::filesystem::path solarCycleCacheFilenamePath = std::format("{}\\{}", cacheDirectoryPath.string(), solarCycleCacheFilename);
+
+    std::filesystem::path ipGeolocationCacheFilenamePath = std::format("{}\\{}", cacheDirectoryPath.string(), ipGeolocationCacheFilename);
 
     void generateSettingsDirectory() {
         std::cout<<"Generating new settings directory...\n";
         std::filesystem::create_directory(settingsDirectoryPath);
-        std::cout<<"Directory " + settingsDirectoryPath.string() + " successfully generated\n";
+        std::cout<<std::format("Directory {} successfully generated\n", settingsDirectoryPath.string());
     }
 
     void generateSettingsDirectoryIfNotExists() {
@@ -91,18 +102,14 @@ private:
         std::cout<<std::format("Generating settings.json file in {}\n", settingsFilePath.string());
         
         settingsFile["debug"] = DEBUG;
-        
         settingsFile["desktopDefaultColorHex"] = ColorUtils::getColorHexRepresentation(desktopController.getDesktopBackgroundColor());
-
         settingsFile["lastExecutionTime"] = TimeUtils::getCurrentSystemTime();
-
         settingsFile["brightnessReductionPercentage"] = DEFAULT_BRIGHTNESS_REDUCTION_PERCENTAGE;
-
         settingsFile["maximumBrightnessTimePercentage"] = DEFAULT_MAXIMUM_BRIGHTNESS_TIME_PERCENTAGE;
-
         settingsFile["solarCycleApiEndpoint"] = DEFAULT_SOLAR_CYCLE_ENDPOINT;
-
         settingsFile["ipGeolocationApiEndpoint"] = DEFAULT_IP_API_GEOLOCATION_ENDPOINT;
+        settingsFile["solarCycleCacheFilename"] = solarCycleCacheFilename;
+        settingsFile["ipGeolocationCacheFilename"] = ipGeolocationCacheFilename;
 
         IpGeolocationClient ipGeolocationClient(DEFAULT_IP_API_GEOLOCATION_ENDPOINT);
         IpGeolocationResponse ipGeolocationResponse = ipGeolocationClient.getIpGeolocationData();
@@ -145,6 +152,8 @@ private:
             maximumBrightnessTimePercentage = settingsFile["maximumBrightnessTimePercentage"].get<double>();
             solarCycleApiEndpoint = settingsFile["solarCycleApiEndpoint"].get<std::string>();
             ipGeolocationApiEndpoint = settingsFile["ipGeolocationApiEndpoint"].get<std::string>();
+            settingsFile["solarCycleCacheFilename"] = settingsFile["solarCycleCacheFilename"].get<std::string>();
+            settingsFile["ipGeolocationCacheFilename"] = settingsFile["ipGeolocationCacheFilename"].get<std::string>();
 
             latitude = settingsFile["latitude"].get<double>();
             longitude = settingsFile["longitude"].get<double>();
@@ -198,6 +207,22 @@ public:
     double getLatitude() { return latitude; }
 
     double getLongitude() { return longitude; }
+
+    std::filesystem::path getCacheDirectoryPath() { return cacheDirectoryPath; }
+
+    std::string getCacheDirectoryPathString() { return cacheDirectoryPath.string(); }
+
+    std::string getSolarCycleCacheFilename() { return solarCycleCacheFilename; }
+
+    std::string getIpGeolocationCacheFilename() { return ipGeolocationCacheFilename; }
+
+    std::filesystem::path getSolarCycleCacheFilenamePath() { return solarCycleCacheFilenamePath; }
+
+    std::filesystem::path getIpGeolocationCacheFilenamePath() { return ipGeolocationCacheFilenamePath; }
+
+    std::string getSolarCycleCacheFilenamePathString() { return solarCycleCacheFilenamePath.string(); }
+
+    std::string getIpGeolocationCacheFilenamePathString() { return ipGeolocationCacheFilenamePath.string(); }
 
     //TODO: implement setters which modify the settings.json file
 };
